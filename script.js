@@ -1,37 +1,18 @@
 // Werkt niet voor sommige soorten oefeningen!
+const SELECTORS = ['qti-text-entry-interaction', 'qti-gap', 'qti-choice-interaction', 'qti-match-interaction'];
 
 document.querySelector('button[title="Juiste antwoorden"]').addEventListener('click', () => {
-    let answers = [];
-
-    document.querySelectorAll('qti-text-entry-interaction').forEach((element) => {
-        element.shadowRoot?.querySelectorAll('.correct-answer').forEach((answerElement) => {
-            answers.push(answerElement.textContent.trim());
-        });
-    });
-
-    document.querySelectorAll('qti-gap').forEach((element) => {
-        element.shadowRoot?.querySelectorAll('.correct-answer').forEach((answerElement) => {
-            answers.push(answerElement.textContent.trim());
-        });
-    });
-
-    document.querySelectorAll('qti-choice-interaction').forEach((element) => {
-        element.shadowRoot?.querySelectorAll('.correct-answer').forEach((answerElement) => {
-            answers.push(answerElement.textContent.trim());
-        });
-    });
-
-
-    document.querySelectorAll('qti-match-interaction').forEach((element) => {
-        element.shadowRoot?.querySelectorAll('.correct-answer').forEach((answerElement) => {
-            answers.push(answerElement.textContent.trim());
-        });
-    });
-    
+    let answers = SELECTORS.flatMap(selector => 
+        [...document.querySelectorAll(selector)]
+            .flatMap(element => 
+                [...(element.shadowRoot?.querySelectorAll('.correct-answer') || [])]
+                    .map(answerElement => answerElement.textContent.trim())
+                    .filter(answer => answer)
+            )
+    );
 
     if (answers.length > 0) {
         console.table(answers);
-
         document.getElementById('answers-container')?.remove();
 
         const container = document.createElement('div');
@@ -84,7 +65,7 @@ document.querySelector('button[title="Juiste antwoorden"]').addEventListener('cl
         const githubLink = document.createElement('p');
         githubLink.style.cssText = "margin-top: 10px; font-size: 14px; text-align: center;";
         const link = document.createElement('a');
-        link.href = 'https://github.com/knyhha/ThiemeMeulenhoff-Juiste-Antwoorden';
+        link.href = 'https://github.com/yourusername';
         link.textContent = 'GitHub';
         link.style.cssText = 'color: #000000; text-decoration: none;';
         githubLink.appendChild(link);
